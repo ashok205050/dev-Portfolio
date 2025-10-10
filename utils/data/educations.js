@@ -16,5 +16,11 @@ export const educations = [
     title: "Secondary School Certificate",
     duration: " - 2019",
     institution: "St Mary Primary and secondary School - Diva, Thane, Maharashtra 400 612",
-  }
+  },
+  // {
+  //   id: 3,
+  //   title: "Secondary School Certificate",
+  //   duration: " - 2019",
+  //   institution: "St Mary Primary and secondary School - Diva, Thane, Maharashtra 400 612",
+  // }
 ]
