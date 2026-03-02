@@ -1,187 +1,145 @@
-// @flow strict
+"use client";
 
 import { personalData } from "@/utils/data/personal-data";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { BsGithub, BsLinkedin } from "react-icons/bs";
-// import { FaFacebook, FaTwitterSquare } from "react-icons/fa";
 import { MdDownload } from "react-icons/md";
-import { RiContactsFill } from "react-icons/ri";
-// import { SiLeetcode } from "react-icons/si";
+
+// Original Feature: Morphing Text
+function MorphingText({ words, interval = 2500 }) {
+  const [index, setIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIsVisible(false);
+      setTimeout(() => {
+        setIndex((prev) => (prev + 1) % words.length);
+        setIsVisible(true);
+      }, 300);
+    }, interval);
+    return () => clearInterval(timer);
+  }, [words, interval]);
+
+  return (
+    <span style={{
+      display: "inline-block",
+      color: "var(--accent)",
+      transition: "opacity 0.3s ease, transform 0.3s ease",
+      opacity: isVisible ? 1 : 0,
+      transform: isVisible ? "translateY(0)" : "translateY(8px)",
+      minWidth: "10ch",
+    }}>
+      {words[index]}
+    </span>
+  );
+}
 
 function HeroSection() {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.querySelectorAll(".animate-on-scroll").forEach((el) => el.classList.add("visible"));
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="relative flex flex-col items-center justify-between py-4 lg:py-12">
-      <Image
-        src="/hero.svg"
-        alt="Hero"
-        width={1572}
-        height={795}
-        className="absolute -top-[98px] -z-10"
-      />
+    <section ref={sectionRef} style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 30% 50%, rgba(200,169,126,0.03), transparent 60%)" }} />
 
-      <div className="grid grid-cols-1 items-start lg:grid-cols-2 lg:gap-12 gap-y-8">
-        <div className="order-2 lg:order-1 flex flex-col items-start justify-center p-2 pb-20 md:pb-10 lg:pt-10">
-          <h1 className="text-3xl font-bold leading-10 text-white md:font-extrabold lg:text-[2.6rem] lg:leading-[3.5rem]">
-            Hello, <br />
-            This is {' '}
-            <span className=" text-pink-500">{personalData.name}</span>
-            {` , I'm a  `}
-            <span className=" text-[#16f2b3]">{personalData.designation}</span>
-            .
-          </h1>
+      <div className="section-container" style={{ position: "relative", zIndex: 2, width: "100%" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem", alignItems: "center" }} className="lg:!grid-cols-[1.1fr_0.9fr] lg:!gap-12">
+          {/* Left Content */}
+          <div className="order-2 lg:!order-1" style={{ display: "flex", flexDirection: "column", gap: "1.75rem" }}>
+            <div>
+              <p className="animate-on-scroll" style={{ fontSize: "0.75rem", color: "var(--fg-muted)", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "1rem" }}>
+                Hey, I&apos;m Ashok Maurya
+              </p>
+              <h1 className="animate-on-scroll delay-1" style={{ lineHeight: 1.05 }}>
+                I build things
+                <br />
+                for the <MorphingText words={["web", "future", "people", "internet"]} />
+              </h1>
+            </div>
 
-          <div className="my-12 flex items-center gap-5">
-            <Link
-              href={personalData.github}
-              target='_blank'
-              className="transition-all text-pink-500 hover:scale-125 duration-300"
-            >
-              <BsGithub size={30} />
-            </Link>
-            <Link
-              href={personalData.linkedIn}
-              target='_blank'
-              className="transition-all text-pink-500 hover:scale-125 duration-300"
-            >
-              <BsLinkedin size={30} />
-            </Link>
-            {/* <Link
-              href={personalData.facebook}
-              target='_blank'
-              className="transition-all text-pink-500 hover:scale-125 duration-300"
-            >
-              <FaFacebook size={30} /> */}
-            {/* </Link>
-            <Link
-              href={personalData.leetcode}
-              target='_blank'
-              className="transition-all text-pink-500 hover:scale-125 duration-300"
-            >
-              <SiLeetcode size={30} />
-            </Link> */}
-            {/* <Link
-              href={personalData.twitter}
-              target='_blank'
-              className="transition-all text-pink-500 hover:scale-125 duration-300"
-            >
-              <FaTwitterSquare size={30} />
-            </Link> */}
-          </div>
+            <p className="animate-on-scroll delay-2" style={{ color: "var(--fg-secondary)", maxWidth: "26rem", fontSize: "0.95rem", lineHeight: 1.7 }}>
+              Fullstack developer passionate about crafting fast, scalable,
+              and beautiful web applications. Currently open to new opportunities.
+            </p>
 
-          <div className="flex items-center gap-3">
-            <Link href="#contact" className="bg-gradient-to-r to-pink-500 from-violet-600 p-[1px] rounded-full transition-all duration-300 hover:from-pink-500 hover:to-violet-600">
-              <button className="px-3 text-xs md:px-8 py-3 md:py-4 bg-[#0d1224] rounded-full border-none text-center md:text-sm font-medium uppercase tracking-wider text-[#ffff] no-underline transition-all duration-200 ease-out  md:font-semibold flex items-center gap-1 hover:gap-3">
-                <span>Contact me</span>
-                <RiContactsFill size={16} />
-              </button>
-            </Link>
+            {/* Buttons */}
+            <div className="animate-on-scroll delay-3" style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+              <Link href="/#projects" className="btn-primary">View My Work</Link>
+              <Link href={personalData.resume} target="_blank" className="btn-secondary">
+                <span>Resume</span><MdDownload size={15} />
+              </Link>
+            </div>
 
-            <Link className="flex items-center gap-1 hover:gap-3 rounded-full bg-gradient-to-r from-pink-500 to-violet-600 px-3 md:px-8 py-3 md:py-4 text-center text-xs md:text-sm font-medium uppercase tracking-wider text-white no-underline transition-all duration-200 ease-out hover:text-white hover:no-underline md:font-semibold" role="button" target="_blank" href={personalData.resume}
-            >
-              <span>Get Resume</span>
-              <MdDownload size={16} />
-            </Link>
-          </div>
+            {/* Stats */}
+            <div className="animate-on-scroll delay-4" style={{ display: "flex", gap: "2.5rem", paddingTop: "0.5rem" }}>
+              {[
+                { n: "4+", l: "Projects" },
+                { n: "18+", l: "Technologies" },
+                { n: "3+", l: "Years" },
+              ].map(({ n, l }) => (
+                <div key={l}>
+                  <p style={{ fontSize: "1.5rem", fontFamily: "var(--font-display)", fontWeight: 700, color: "var(--fg-primary)" }}>{n}</p>
+                  <p style={{ fontSize: "0.65rem", color: "var(--fg-muted)", textTransform: "uppercase", letterSpacing: "0.12em", marginTop: 2 }}>{l}</p>
+                </div>
+              ))}
+            </div>
 
-        </div>
-        <div className="order-1 lg:order-2 from-[#0d1224] border-[#1b2c68a0] relative rounded-lg border bg-gradient-to-r to-[#0a0d37]">
-          <div className="flex flex-row">
-            <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-pink-500 to-violet-600"></div>
-            <div className="h-[1px] w-full bg-gradient-to-r from-violet-600 to-transparent"></div>
-          </div>
-          <div className="px-4 lg:px-8 py-5">
-            <div className="flex flex-row space-x-2">
-              <div className="h-3 w-3 rounded-full bg-red-400"></div>
-              <div className="h-3 w-3 rounded-full bg-orange-400"></div>
-              <div className="h-3 w-3 rounded-full bg-green-200"></div>
+            {/* Social */}
+            <div className="animate-on-scroll delay-5" style={{ display: "flex", gap: "0.6rem", paddingTop: "0.25rem" }}>
+              {[{ href: personalData.github, Icon: BsGithub }, { href: personalData.linkedIn, Icon: BsLinkedin }].map(({ href, Icon }) => (
+                <Link key={href} href={href} target="_blank" style={{
+                  width: 36, height: 36, borderRadius: "50%", border: "1px solid var(--border-light)",
+                  display: "flex", alignItems: "center", justifyContent: "center", color: "var(--fg-muted)", transition: "all 0.3s",
+                }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent)"; e.currentTarget.style.borderColor = "var(--accent)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "var(--fg-muted)"; e.currentTarget.style.borderColor = "var(--border-light)"; }}
+                ><Icon size={16} /></Link>
+              ))}
             </div>
           </div>
-          <div className="overflow-hidden border-t-[2px] border-indigo-900 px-4 lg:px-8 py-4 lg:py-8">
-            <code className="font-mono text-xs md:text-sm lg:text-base">
-              <div className="blink">
-                <span className="mr-2 text-pink-500">const</span>
-                <span className="mr-2 text-white">coder</span>
-                <span className="mr-2 text-pink-500">=</span>
-                <span className="text-gray-400">{'{'}</span>
+
+          {/* Right Image */}
+          <div className="order-1 lg:!order-2 animate-on-scroll" style={{ display: "flex", justifyContent: "center" }}>
+            <div style={{ position: "relative", width: "100%", maxWidth: 420, aspectRatio: "1", borderRadius: "1.25rem", overflow: "hidden", border: "1px solid var(--border-clr)" }}>
+              <Image src="/hero-portrait.png" alt="Ashok Maurya" fill className="object-cover" priority sizes="(max-width: 768px) 90vw, 420px" />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, var(--bg-primary) 0%, transparent 40%)" }} />
+              {/* Code badge */}
+              <div style={{
+                position: "absolute", bottom: 16, left: 16, padding: "0.5rem 0.75rem",
+                background: "rgba(10,10,10,0.8)", backdropFilter: "blur(8px)",
+                borderRadius: 8, fontFamily: "monospace", fontSize: "0.65rem", color: "var(--accent)",
+              }}>
+                <span style={{ color: "var(--fg-muted)" }}>~/</span>fullstack-dev<span style={{ animation: "blink 1s infinite" }}>_</span>
               </div>
-              <div>
-                <span className="ml-4 lg:ml-8 mr-2 text-white">name:</span>
-                <span className="text-gray-400">{`'`}</span>
-                <span className="text-amber-300">Ashok Maurya</span>
-                <span className="text-gray-400">{`',`}</span>
-              </div>
-              <div className="ml-4 lg:ml-8 mr-2">
-                <span className=" text-white">skills:</span>
-                <span className="text-gray-400">{`['`}</span>
-                <span className="text-amber-300">React</span>
-                <span className="text-gray-400">{"', '"}</span>
-                <span className="text-amber-300">NextJS</span>
-                <span className="text-gray-400">{"', '"}</span>
-                <span className="text-amber-300">Redux</span>
-                <span className="text-gray-400">{"', '"}</span>
-                <span className="text-amber-300">Express</span>
-                <span className="text-gray-400">{"', '"}</span>
-                <span className="text-amber-300">NestJS</span>
-                <span className="text-gray-400">{"', '"}</span>
-                <span className="text-amber-300">MySql</span>
-                <span className="text-gray-400">{"', '"}</span>
-                <span className="text-amber-300">MongoDB</span>
-                <span className="text-gray-400">{"', '"}</span>
-                <span className="text-amber-300">Docker</span>
-                <span className="text-gray-400">{"', '"}</span>
-                <span className="text-amber-300">AWS</span>
-                <span className="text-gray-400">{"'],"}</span>
-              </div>
-              <div>
-                <span className="ml-4 lg:ml-8 mr-2 text-white">hardWorker:</span>
-                <span className="text-orange-400">true</span>
-                <span className="text-gray-400">,</span>
-              </div>
-              <div>
-                <span className="ml-4 lg:ml-8 mr-2 text-white">quickLearner:</span>
-                <span className="text-orange-400">true</span>
-                <span className="text-gray-400">,</span>
-              </div>
-              <div>
-                <span className="ml-4 lg:ml-8 mr-2 text-white">problemSolver:</span>
-                <span className="text-orange-400">true</span>
-                <span className="text-gray-400">,</span>
-              </div>
-              <div>
-                <span className="ml-4 lg:ml-8 mr-2 text-green-400">hireable:</span>
-                <span className="text-orange-400">function</span>
-                <span className="text-gray-400">{'() {'}</span>
-              </div>
-              <div>
-                <span className="ml-8 lg:ml-16 mr-2 text-orange-400">return</span>
-                <span className="text-gray-400">{`(`}</span>
-              </div>
-              <div>
-                <span className="ml-12 lg:ml-24 text-cyan-400">this.</span>
-                <span className="mr-2 text-white">hardWorker</span>
-                <span className="text-amber-300">&amp;&amp;</span>
-              </div>
-              <div>
-                <span className="ml-12 lg:ml-24 text-cyan-400">this.</span>
-                <span className="mr-2 text-white">problemSolver</span>
-                <span className="text-amber-300">&amp;&amp;</span>
-              </div>
-              <div>
-                <span className="ml-12 lg:ml-24 text-cyan-400">this.</span>
-                <span className="mr-2 text-white">skills.length</span>
-                <span className="mr-2 text-amber-300">&gt;=</span>
-                <span className="text-orange-400">5</span>
-              </div>
-              <div><span className="ml-8 lg:ml-16 mr-2 text-gray-400">{`);`}</span></div>
-              <div><span className="ml-4 lg:ml-8 text-gray-400">{`};`}</span></div>
-              <div><span className="text-gray-400">{`};`}</span></div>
-            </code>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Scroll indicator */}
+      <div style={{ position: "absolute", bottom: 28, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, color: "var(--fg-muted)" }}>
+        <div style={{ width: 1, height: 32, background: "linear-gradient(to bottom, var(--accent), transparent)" }} />
+        <span style={{ fontSize: "0.6rem", letterSpacing: "0.2em", textTransform: "uppercase" }}>Scroll</span>
+      </div>
     </section>
   );
-};
+}
 
 export default HeroSection;

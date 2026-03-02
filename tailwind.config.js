@@ -7,27 +7,34 @@ module.exports = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      colors: {
+        'bg-primary': '#0a0a0a',
+        'bg-secondary': '#111111',
+        'bg-card': '#1a1a1a',
+        'bg-card-hover': '#222222',
+        'text-primary': '#f5f0e8',
+        'text-secondary': '#999999',
+        'text-muted': '#666666',
+        'accent': '#c8a97e',
+        'accent-hover': '#d4b98e',
+        'border-color': '#2a2a2a',
+        'border-light': '#333333',
       },
-      container: {
-        center: true,
-        padding: {
-          DEFAULT: "1rem",
-          sm: "2rem",
-          lg: "3rem",
-          xl: "4rem",
-          "2xl": "4rem",
-          "3xl": "5rem",
-        },
+      fontFamily: {
+        display: ['Space Grotesk', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
       },
-
-      extend: {
-        screens: {
-          "4k": "1980px",
-        },
+      animation: {
+        'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'fade-in': 'fadeIn 0.6s ease forwards',
+        'scale-in': 'scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'slide-left': 'slideInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'slide-right': 'slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'float': 'float 3s ease-in-out infinite',
+        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+      },
+      screens: {
+        '4k': '1980px',
       },
     },
   },

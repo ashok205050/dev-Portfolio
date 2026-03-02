@@ -1,58 +1,31 @@
-import Script from "next/script";
-import { Inter } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import Footer from "./components/footer";
-import ScrollToTop from "./components/helper/scroll-to-top";
 import Navbar from "./components/navbar";
-
+import GravityCursorWrapper from "./components/helper/gravity-cursor-wrapper";
 import "./css/card.scss";
 import "./css/globals.scss";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata = {
-  title: "Portfolio of Ashok Maurya - Web Developer",
-  description:
-    "This is the portfolio of Ashok Maurya. I am a full stack developer and a self taught developer. I love to learn new things and I am always open to collaborating with others. I am a quick learner and I am always looking for new challenges.",
+  title: "Ashok Maurya — Fullstack Developer",
+  description: "Portfolio of Ashok Maurya. Fullstack developer building modern web applications with React, Next.js, Node.js, and MongoDB.",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        {/* Google Tag Manager */}
-        {process.env.NEXT_PUBLIC_GTM && (
-          <Script
-            id="gtm-script"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-                (function(w,d,s,l,i){w[l]=w[l]||[];
-                w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
-                var f=d.getElementsByTagName(s)[0],
-                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
-                j.async=true;j.src=
-                'https://www.googletagmanager.com/gtm.js?id='+i+dl;
-                f.parentNode.insertBefore(j,f);
-                })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM}');
-              `,
-            }}
-          />
-        )}
-
-        <ToastContainer />
-
-        <main className="min-h-screen relative mx-auto px-6 sm:px-12 lg:max-w-[70rem] xl:max-w-[76rem] 2xl:max-w-[92rem] text-white">
-          <Navbar />
-          {children}
-          <ScrollToTop />
-        </main>
-
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      </head>
+      <body suppressHydrationWarning>
+        <GravityCursorWrapper />
+        <ToastContainer position="bottom-right" theme="dark" toastStyle={{ background: "#1a1a1a", border: "1px solid #2a2a2a", color: "#f5f0e8" }} />
+        <Navbar />
+        <main style={{ position: "relative", zIndex: 2 }}>{children}</main>
         <Footer />
       </body>
     </html>
   );
 }
-  
